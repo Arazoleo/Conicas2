@@ -102,11 +102,15 @@ b_input = st.text_input("Valor de b (semi-eixo imaginário)", "3")
 try:
     a = float(a_input)
     b = float(b_input)
+
+    if a <= 0 or b <= 0:
+        st.error("Os valores de 'a' e 'b' devem ser positivos e maiores que zero.")
+        a = b = 0  
 except ValueError:
     st.error("Por favor, insira números válidos para 'a' e 'b'.")
-    a = b = 0  # Valor default em caso de erro
+    a = b = 0  
 
-# Entrada para as coordenadas do centro
+
 x0 = st.number_input("Coordenada x do centro", value=0.0, step=0.1)
 y0 = st.number_input("Coordenada y do centro", value=0.0, step=0.1)
 
