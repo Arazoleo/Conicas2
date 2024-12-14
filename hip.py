@@ -7,7 +7,7 @@ def construct_hyperbola(a, b, x0, y0):
 
     fig = go.Figure()
 
-    if a > b: 
+    if a > b:  
         x = np.linspace(x0 - 10 * a, x0 + 10 * a, 400)
         y_positive = []
         y_negative = []
@@ -24,7 +24,7 @@ def construct_hyperbola(a, b, x0, y0):
         y_positive = np.array(y_positive)
         y_negative = np.array(y_negative)
 
-      
+        
         asymptote_y1 = y0 + (b / a) * (x - x0)
         asymptote_y2 = y0 - (b / a) * (x - x0)
 
@@ -34,13 +34,12 @@ def construct_hyperbola(a, b, x0, y0):
         fig.add_trace(go.Scatter(x=x, y=asymptote_y1, mode='lines', name='Assíntota 1', line=dict(color='red', dash='dash')))
         fig.add_trace(go.Scatter(x=x, y=asymptote_y2, mode='lines', name='Assíntota 2', line=dict(color='red', dash='dash')))
         
-       
+        
         fig.add_trace(go.Scatter(x=[x0 + a, x0 - a], y=[y0, y0], mode='markers', name='Vértices', marker=dict(color='green', size=10)))
         
-   
         fig.add_trace(go.Scatter(x=[x0 + c, x0 - c], y=[y0, y0], mode='markers', name='Focos', marker=dict(color='red', size=10)))
 
-    else: 
+    else:  
         y = np.linspace(y0 - 10 * b, y0 + 10 * b, 400)
         x_positive = []
         x_negative = []
@@ -57,23 +56,23 @@ def construct_hyperbola(a, b, x0, y0):
         x_positive = np.array(x_positive)
         x_negative = np.array(x_negative)
 
-      
+        # Assíntotas
         asymptote_x1 = x0 + (a / b) * (y - y0)
         asymptote_x2 = x0 - (a / b) * (y - y0)
 
-        
+        # Adicionando os gráficos
         fig.add_trace(go.Scatter(x=x_positive, y=y, mode='lines', name='Hipérbole Direita', line=dict(color='blue')))
         fig.add_trace(go.Scatter(x=x_negative, y=y, mode='lines', name='Hipérbole Esquerda', line=dict(color='blue')))
         fig.add_trace(go.Scatter(x=asymptote_x1, y=y, mode='lines', name='Assíntota 1', line=dict(color='red', dash='dash')))
         fig.add_trace(go.Scatter(x=asymptote_x2, y=y, mode='lines', name='Assíntota 2', line=dict(color='red', dash='dash')))
         
-     
+        
         fig.add_trace(go.Scatter(x=[x0, x0], y=[y0 + b, y0 - b], mode='markers', name='Vértices', marker=dict(color='green', size=10)))
         
-    
+     
         fig.add_trace(go.Scatter(x=[x0, x0], y=[y0 + c, y0 - c], mode='markers', name='Focos', marker=dict(color='red', size=10)))
 
-  
+
     fig.update_layout(
         title="Gráfico Interativo da Hipérbole com Assíntotas, Vértices e Focos",
         xaxis_title="x",
@@ -88,7 +87,7 @@ def construct_hyperbola(a, b, x0, y0):
     return fig
 
 
-st.title("Dashboard Interativo: Hipérbole com Elementos")
+st.title("Hipérbole com Elementos")
 st.write("""
 Este aplicativo permite visualizar gráficos de hipérboles com assíntotas, vértices e focos. 
 Você pode ajustar os parâmetros e explorar a geometria.
@@ -98,18 +97,23 @@ Você pode ajustar os parâmetros e explorar a geometria.
 a_input = st.text_input("Valor de a (semi-eixo real)", "5")
 b_input = st.text_input("Valor de b (semi-eixo imaginário)", "3")
 
+
 try:
     a = float(a_input)
     b = float(b_input)
+
+    if a <= 0 or b <= 0:
+        st.error("Os valores de 'a' e 'b' devem ser positivos e maiores que zero.")
+        a = b = 0  
 except ValueError:
     st.error("Por favor, insira números válidos para 'a' e 'b'.")
-    a = b = 0 
+    a = b = 0  
 
 
 x0 = st.number_input("Coordenada x do centro", value=0.0, step=0.1)
 y0 = st.number_input("Coordenada y do centro", value=0.0, step=0.1)
 
-
+# Gerar o gráfico
 if a != 0 and b != 0:
     fig = construct_hyperbola(a, b, x0, y0)
     st.plotly_chart(fig)
