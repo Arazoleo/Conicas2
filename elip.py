@@ -3,6 +3,9 @@ import plotly.graph_objects as go
 import numpy as np
 
 def Elipse_Composer(eixo, a, b, center=(0, 0), angle=0, resolution=1000):
+    if eixo == 'y':  # Trocar a e b para respeitar a escolha do usuário
+        a, b = b, a
+
     t = np.linspace(0, 2 * np.pi, resolution)
     x = center[0] + a * np.cos(t) * np.cos(angle) - b * np.sin(t) * np.sin(angle)
     y = center[1] + a * np.cos(t) * np.sin(angle) + b * np.sin(t) * np.cos(angle)
@@ -12,23 +15,23 @@ def Elipse_Composer(eixo, a, b, center=(0, 0), angle=0, resolution=1000):
     # Adicionar a elipse
     fig.add_trace(go.Scatter(x=x, y=y, mode='lines', name='Elipse'))
 
-    # Vértices horizontais
+    # Vértices horizontais (ajustados para o eixo maior)
     vertices_horizontal = [(center[0] + a * np.cos(angle), center[1] + a * np.sin(angle)),
                            (center[0] - a * np.cos(angle), center[1] - a * np.sin(angle))]
     fig.add_trace(go.Scatter(x=[v[0] for v in vertices_horizontal],
                              y=[v[1] for v in vertices_horizontal],
                              mode='markers',
                              marker=dict(color='red'),
-                             name='Vértices Horizontais'))
+                             name='Vértices do Eixo Maior'))
 
-    # Vértices verticais
+    # Vértices verticais (ajustados para o eixo menor)
     vertices_vertical = [(center[0] - b * np.sin(angle), center[1] + b * np.cos(angle)),
                          (center[0] + b * np.sin(angle), center[1] - b * np.cos(angle))]
     fig.add_trace(go.Scatter(x=[v[0] for v in vertices_vertical],
                              y=[v[1] for v in vertices_vertical],
                              mode='markers',
                              marker=dict(color='blue'),
-                             name='Vértices Verticais'))
+                             name='Vértices do Eixo Menor'))
 
     # Focos
     c = np.sqrt(abs(a**2 - b**2))
@@ -39,7 +42,7 @@ def Elipse_Composer(eixo, a, b, center=(0, 0), angle=0, resolution=1000):
                                  mode='markers', marker=dict(color='green'), name='Foco 1'))
         fig.add_trace(go.Scatter(x=[foco2[0]], y=[foco2[1]],
                                  mode='markers', marker=dict(color='yellow'), name='Foco 2'))
-        title = 'Elipse com Focos na Vertical'
+        title = 'Elipse com Eixo Maior na Vertical'
     else:
         foco1 = (center[0] + c, center[1])
         foco2 = (center[0] - c, center[1])
@@ -47,7 +50,7 @@ def Elipse_Composer(eixo, a, b, center=(0, 0), angle=0, resolution=1000):
                                  mode='markers', marker=dict(color='green'), name='Foco 1'))
         fig.add_trace(go.Scatter(x=[foco2[0]], y=[foco2[1]],
                                  mode='markers', marker=dict(color='yellow'), name='Foco 2'))
-        title = 'Elipse com Focos na Horizontal'
+        title = 'Elipse com Eixo Maior na Horizontal'
 
     # Configurações do gráfico
     fig.update_layout(
@@ -60,6 +63,7 @@ def Elipse_Composer(eixo, a, b, center=(0, 0), angle=0, resolution=1000):
     )
 
     return fig
+
 
 def main():
     st.title("Composição de Elipses")
